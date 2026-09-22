@@ -1,0 +1,14 @@
+{
+  "info": {"name":"CE385 Workshop 4 - TODO API","schema":"https://schema.getpostman.com/json/collection/v2.1.0/collection.json"},
+  "variable": [{"key":"baseUrl","value":"http://127.0.0.1:3000"},{"key":"todoId","value":"1"}],
+  "item": [
+    {"name":"01 Health","request":{"method":"GET","url":"{{baseUrl}}/health"},"event":[{"listen":"test","script":{"exec":["pm.test('200 OK',()=>pm.response.to.have.status(200));"]}}]},
+    {"name":"02 List todos","request":{"method":"GET","url":"{{baseUrl}}/api/todos"},"event":[{"listen":"test","script":{"exec":["pm.test('200 OK',()=>pm.response.to.have.status(200));","pm.test('has items',()=>pm.expect(pm.response.json()).to.have.property('items')); "]}}]},
+    {"name":"03 Filter query","request":{"method":"GET","url":"{{baseUrl}}/api/todos?done=false&q=Express&sort=title"},"event":[{"listen":"test","script":{"exec":["pm.test('200 OK',()=>pm.response.to.have.status(200));"]}}]},
+    {"name":"04 Create todo 201","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"title\": \"ทดสอบ POST\",\n  \"done\": false,\n  \"priority\": \"high\"\n}"},"url":"{{baseUrl}}/api/todos"},"event":[{"listen":"test","script":{"exec":["pm.test('201 Created',()=>pm.response.to.have.status(201));","pm.collectionVariables.set('createdId',pm.response.json().id);"]}}]},
+    {"name":"05 Invalid body 400","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"title\": \"\",\n  \"priority\": \"urgent\"\n}"},"url":"{{baseUrl}}/api/todos"},"event":[{"listen":"test","script":{"exec":["pm.test('400 Bad Request',()=>pm.response.to.have.status(400));"]}}]},
+    {"name":"06 Missing todo 404","request":{"method":"GET","url":"{{baseUrl}}/api/todos/missing"},"event":[{"listen":"test","script":{"exec":["pm.test('404 Not Found',()=>pm.response.to.have.status(404));"]}}]},
+    {"name":"07 Replace todo","request":{"method":"PUT","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"title\": \"แก้ไขแล้ว\",\n  \"done\": true,\n  \"priority\": \"normal\"\n}"},"url":"{{baseUrl}}/api/todos/{{todoId}}"},"event":[{"listen":"test","script":{"exec":["pm.test('200 OK',()=>pm.response.to.have.status(200));"]}}]},
+    {"name":"08 Delete todo 204","request":{"method":"DELETE","url":"{{baseUrl}}/api/todos/{{todoId}}"},"event":[{"listen":"test","script":{"exec":["pm.test('204 No Content',()=>pm.response.to.have.status(204));"]}}]}
+  ]
+}

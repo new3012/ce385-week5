@@ -1,0 +1,10 @@
+import { Router } from "express";
+import { AppError } from "../middlewares/error-handler.mjs";
+import { createTodo, deleteTodo, findTodo, listTodos, replaceTodo } from "../services/todo-service.mjs";
+export const router = Router();
+const validate = (req, res, next) => { const { title, done = false, priority = "normal" } = req.body ?? {}; if (typeof title !== "string" || !title.trim() || typeof done !== "boolean" || !["high", "normal", "low"].includes(priority)) return next(new AppError(400, "ข้อมูล todo ไม่ถูกต้อง")); next(); };
+router.get("/", (req, res) => res.json(listTodos(req.query)));
+router.get("/:id", (req, res, next) => { const todo = findTodo(req.params.id); if (!todo) return next(new AppError(404, `ไม่พบรายการ ${req.params.id}`)); return res.json(todo); });
+router.post("/", validate, (req, res) => res.status(201).json(createTodo(req.body)));
+router.put("/:id", validate, (req, res, next) => { const todo = replaceTodo(req.params.id, req.body); if (!todo) return next(new AppError(404, `ไม่พบรายการ ${req.params.id}`)); return res.json(todo); });
+router.delete("/:id", (req, res, next) => { if (!deleteTodo(req.params.id)) return next(new AppError(404, `ไม่พบรายการ ${req.params.id}`)); return res.status(204).end(); });

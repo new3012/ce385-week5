@@ -1,0 +1,9 @@
+{
+  "name": "ce385-week5-workshop4",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {"dev":"nodemon ex4-router-error.mjs","ex1":"node ex1-server-routes.mjs","ex2":"node ex2-middleware.mjs","ex3":"node ex3-crud.mjs","start":"node ex4-router-error.mjs"},
+  "dependencies": {"express":"^4.21.2"},
+  "devDependencies": {"nodemon":"^3.1.9"}
+}
